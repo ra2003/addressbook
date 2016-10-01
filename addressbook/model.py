@@ -43,6 +43,11 @@ class AddressBook:
                 'Person %s has been already added.' % person.name)
 
         self.persons.add(person)
+        for group in person.groups:
+            # double check if group is not already in the address book
+            if group not in self.groups:
+                self.groups.add(group)
+
         # add index for first and the last name for searching
         self.first_names.setdefault(person.first_name.lower(), set()).add(person)
         self.last_names.setdefault(person.last_name.lower(), set()).add(person)
