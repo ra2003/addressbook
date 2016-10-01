@@ -28,10 +28,6 @@ class ApiTestCase(unittest.TestCase):
         self.address_book = addressbook.AddressBook()
         self.persons = set()
         self.groups = set()
-        # prepare persons structure to test adding new persons
-        # and already existing one
-        self.all_persons = [tests.create_person(i) for i in
-                            range(tests.TEST_COUNT)]
 
     def tearDown(self):
         """
@@ -40,7 +36,6 @@ class ApiTestCase(unittest.TestCase):
         self.address_book = None
         self.persons = None
         self.groups = None
-        self.all_persons = None
 
     def _create_group(self, count):
         """
@@ -242,7 +237,7 @@ class ApiTestCase(unittest.TestCase):
 
             for person in group.persons:
                 for email in person.emails:
-                    for j in range(0, len(email), 4):
+                    for j in range(0, len(email)):
                         email_prefix = email[:j]
                         # check by prefix
                         persons = self.address_book.find_persons_by_email(email_prefix)
