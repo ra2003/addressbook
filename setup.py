@@ -25,7 +25,7 @@ test_requires.extend([
 
 setup(name='addressbook',
     version='0.0.1',
-    description='Super Simple Stocs',
+    description='Simple address book library in Python.',
     long_description=README,
     classifiers=[
         'Environment :: Console',
