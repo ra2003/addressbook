@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>addressbook.model Package &#8212; Python  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python  documentation" href="contents.html" />
+    <link rel="next" title="addressbook.trie Package" href="trie.html" />
+    <link rel="prev" title="addressbook Package" href="addressbook.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-addressbook.model">
+<span id="addressbook-model-package"></span><h1><a class="reference internal" href="#module-addressbook.model" title="addressbook.model"><code class="xref py py-mod docutils literal"><span class="pre">addressbook.model</span></code></a> Package<a class="headerlink" href="#module-addressbook.model" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="addressbook.model.Address">
+<em class="property">class </em><code class="descclassname">addressbook.model.</code><code class="descname">Address</code><span class="sig-paren">(</span><em>*street_address_lines</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#Address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.Address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Address structure.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="addressbook.model.AddressBook">
+<em class="property">class </em><code class="descclassname">addressbook.model.</code><code class="descname">AddressBook</code><a class="reference internal" href="_modules/addressbook/model.html#AddressBook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.AddressBook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Address Book structure contains groups and persons.</p>
+<dl class="method">
+<dt id="addressbook.model.AddressBook.add_group">
+<code class="descname">add_group</code><span class="sig-paren">(</span><em>group</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#AddressBook.add_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.AddressBook.add_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a group to the address book.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>group</strong> &#8211; to add</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>AlreadyPresentException</strong> &#8211; group is already added</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="addressbook.model.AddressBook.add_person">
+<code class="descname">add_person</code><span class="sig-paren">(</span><em>person</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#AddressBook.add_person"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.AddressBook.add_person" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a person to the address book.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>person</strong> &#8211; to add</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>AlreadyPresentException</strong> &#8211; person is already added</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="addressbook.model.AddressBook.find_groups_by_person">
+<code class="descname">find_groups_by_person</code><span class="sig-paren">(</span><em>person</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#AddressBook.find_groups_by_person"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.AddressBook.find_groups_by_person" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a person we want to easily find the groups the person belongs to.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>person</strong> &#8211; to filter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">set of groups</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="addressbook.model.AddressBook.find_persons_by_email">
+<code class="descname">find_persons_by_email</code><span class="sig-paren">(</span><em>email_prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#AddressBook.find_persons_by_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.AddressBook.find_persons_by_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find person by email address (can supply either the exact string or
+a prefix string, ie. both &#8220;<a class="reference external" href="mailto:alexander&#37;&#52;&#48;company&#46;com">alexander<span>&#64;</span>company<span>&#46;</span>com</a>&#8221; and &#8220;alex&#8221;).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>email_prefix</strong> &#8211; to find the person</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">set of persons</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="addressbook.model.AddressBook.find_persons_by_group">
+<code class="descname">find_persons_by_group</code><span class="sig-paren">(</span><em>group</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#AddressBook.find_persons_by_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.AddressBook.find_persons_by_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a group we want to easily find its members.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>group</strong> &#8211; to filter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">set of persons</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="addressbook.model.AddressBook.find_persons_by_name">
+<code class="descname">find_persons_by_name</code><span class="sig-paren">(</span><em>first_name=None</em>, <em>last_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#AddressBook.find_persons_by_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.AddressBook.find_persons_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find person by name (can supply either first name, last name, or both).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>first_name</strong> &#8211; first name of the person</li>
+<li><strong>last_name</strong> &#8211; last name of the person</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">set of persons</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="addressbook.model.Group">
+<em class="property">class </em><code class="descclassname">addressbook.model.</code><code class="descname">Group</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#Group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Group structure.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="addressbook.model.Person">
+<em class="property">class </em><code class="descclassname">addressbook.model.</code><code class="descname">Person</code><span class="sig-paren">(</span><em>first_name</em>, <em>last_name</em>, <em>id=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/addressbook/model.html#Person"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#addressbook.model.Person" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Person structure:
+- A person has a first name and a last name.
+- A person has one or more street addresses.
+- A person has one or more email addresses.
+- A person has one or more phone numbers.
+- A person can be a member of one or more groups.</p>
+<dl class="attribute">
+<dt id="addressbook.model.Person.id">
+<code class="descname">id</code><a class="headerlink" href="#addressbook.model.Person.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="addressbook.model.Person.name">
+<code class="descname">name</code><a class="headerlink" href="#addressbook.model.Person.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get simplified name based of first name and second name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">full name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="contents.html">Documentation overview</a><ul>
+      <li>Previous: <a href="addressbook.html" title="previous chapter"><code class="docutils literal"><span class="pre">addressbook</span></code> Package</a></li>
+      <li>Next: <a href="trie.html" title="next chapter"><code class="docutils literal"><span class="pre">addressbook.trie</span></code> Package</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/model.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/model.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

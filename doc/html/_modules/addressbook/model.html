@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>addressbook.model &#8212; Python  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Python  documentation" href="../../contents.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for addressbook.model</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># addressbook</span>
+<span class="c1"># https://github.com/tgorka/addressbook</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2016 Tomasz Gorka &lt;http://tomasz.gorka.org.pl&gt;</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">addressbook</span> <span class="k">import</span> <span class="n">exception</span><span class="p">,</span> <span class="n">trie</span>
+
+
+<div class="viewcode-block" id="AddressBook"><a class="viewcode-back" href="../../model.html#addressbook.model.AddressBook">[docs]</a><span class="k">class</span> <span class="nc">AddressBook</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Address Book structure contains groups and persons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize address book with all the needed structures</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># initialize groups and persons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">persons</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="c1"># hash maps for searching over first and the last person name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_names</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_names</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># hash maps for searching over email and trie with emails</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emails</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emailsTrie</span> <span class="o">=</span> <span class="n">trie</span><span class="o">.</span><span class="n">Trie</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AddressBook.add_person"><a class="viewcode-back" href="../../model.html#addressbook.model.AddressBook.add_person">[docs]</a>    <span class="k">def</span> <span class="nf">add_person</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">person</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a person to the address book.</span>
+
+<span class="sd">        :param person: to add</span>
+<span class="sd">        :raises AlreadyPresentException: person is already added</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">person</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">AlreadyPresentException</span><span class="p">(</span>
+                <span class="s1">&#39;Person </span><span class="si">%s</span><span class="s1"> has been already added.&#39;</span> <span class="o">%</span> <span class="n">person</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">person</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+            <span class="c1"># double check if group is not already in the address book</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+        <span class="c1"># add index for first and the last name for searching</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_names</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">first_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_names</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">last_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
+        <span class="c1"># add index for email for searching</span>
+        <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">person</span><span class="o">.</span><span class="n">emails</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">email</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">emailsTrie</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">email</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="AddressBook.add_group"><a class="viewcode-back" href="../../model.html#addressbook.model.AddressBook.add_group">[docs]</a>    <span class="k">def</span> <span class="nf">add_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a group to the address book.</span>
+
+<span class="sd">        :param group: to add</span>
+<span class="sd">        :raises AlreadyPresentException: group is already added</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exception</span><span class="o">.</span><span class="n">AlreadyPresentException</span><span class="p">(</span>
+                <span class="s1">&#39;Group </span><span class="si">%s</span><span class="s1"> has been already added.&#39;</span> <span class="o">%</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">persons</span><span class="p">:</span>
+            <span class="c1"># double check if group is set for the person</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">person</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+                <span class="n">person</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">person</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">persons</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_person</span><span class="p">(</span><span class="n">person</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AddressBook.find_persons_by_group"><a class="viewcode-back" href="../../model.html#addressbook.model.AddressBook.find_persons_by_group">[docs]</a>    <span class="k">def</span> <span class="nf">find_persons_by_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a group we want to easily find its members.</span>
+
+<span class="sd">        :param group: to filter</span>
+<span class="sd">        :return: set of persons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">group</span><span class="o">.</span><span class="n">persons</span></div>
+
+<div class="viewcode-block" id="AddressBook.find_groups_by_person"><a class="viewcode-back" href="../../model.html#addressbook.model.AddressBook.find_groups_by_person">[docs]</a>    <span class="k">def</span> <span class="nf">find_groups_by_person</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">person</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a person we want to easily find the groups the person belongs to.</span>
+
+<span class="sd">        :param person: to filter</span>
+<span class="sd">        :return: set of groups</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">person</span><span class="o">.</span><span class="n">groups</span></div>
+
+<div class="viewcode-block" id="AddressBook.find_persons_by_name"><a class="viewcode-back" href="../../model.html#addressbook.model.AddressBook.find_persons_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">find_persons_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find person by name (can supply either first name, last name, or both).</span>
+
+<span class="sd">        :param first_name: first name of the person</span>
+<span class="sd">        :param last_name: last name of the person</span>
+<span class="sd">        :return: set of persons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get the sets of persons by first name and last name</span>
+        <span class="n">persons_by_first_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">first_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">set</span><span class="p">())</span> \
+            <span class="k">if</span> <span class="n">first_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">persons</span>
+        <span class="n">persons_by_last_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">last_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">set</span><span class="p">())</span> \
+            <span class="k">if</span> <span class="n">last_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">persons</span>
+
+        <span class="c1"># return the common part of this 2 sets</span>
+        <span class="k">return</span> <span class="n">persons_by_first_name</span> <span class="o">&amp;</span> <span class="n">persons_by_last_name</span></div>
+
+<div class="viewcode-block" id="AddressBook.find_persons_by_email"><a class="viewcode-back" href="../../model.html#addressbook.model.AddressBook.find_persons_by_email">[docs]</a>    <span class="k">def</span> <span class="nf">find_persons_by_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email_prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find person by email address (can supply either the exact string or</span>
+<span class="sd">        a prefix string, ie. both &quot;alexander@company.com&quot; and &quot;alex&quot;).</span>
+
+<span class="sd">        :param email_prefix: to find the person</span>
+<span class="sd">        :return: set of persons</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">persons</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">emailsTrie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email_prefix</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+            <span class="n">persons</span> <span class="o">|=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">persons</span></div></div>
+
+
+<div class="viewcode-block" id="Person"><a class="viewcode-back" href="../../model.html#addressbook.model.Person">[docs]</a><span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Person structure:</span>
+<span class="sd">    - A person has a first name and a last name.</span>
+<span class="sd">    - A person has one or more street addresses.</span>
+<span class="sd">    - A person has one or more email addresses.</span>
+<span class="sd">    - A person has one or more phone numbers.</span>
+<span class="sd">    - A person can be a member of one or more groups.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize Person with all needed structures.</span>
+<span class="sd">        If id is None the default one will be generated using UUID algorithm.</span>
+<span class="sd">        IMPORTANT: recognize person by id not by name because sometimes</span>
+<span class="sd">        a few people has the same name (the first and the last one)</span>
+
+<span class="sd">        :param first_name: of the person.</span>
+<span class="sd">        :param last_name: of the person.</span>
+<span class="sd">        :param id: identifier of the person. None by default.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__id</span> <span class="o">=</span> <span class="nb">id</span> <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">first_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">last_name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">emails</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phones</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addresses</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get simplified name based of first name and second name</span>
+
+<span class="sd">        :return: full name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__id</span>
+
+    <span class="nd">@id</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t change the ID, once it has ben set in &quot;</span>
+                        <span class="o">+</span> <span class="s2">&quot;the constructor.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Equal method</span>
+<span class="sd">        Use id to equal 2 persons by id.</span>
+<span class="sd">        So it will work even if person has changed the name and only one object</span>
+<span class="sd">        will represent current state.</span>
+
+<span class="sd">        :param other: object to compare</span>
+<span class="sd">        :return: is the same</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="n">other</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Not equal method</span>
+<span class="sd">        Use id to equal 2 persons by id.</span>
+<span class="sd">        So it will work even if person has changed the name and only one object</span>
+<span class="sd">        will represent current state.</span>
+
+<span class="sd">        :param other: object to compare</span>
+<span class="sd">        :return: is different</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hash method</span>
+<span class="sd">        Use hash of the id property.</span>
+
+<span class="sd">        :return: hash code</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Address"><a class="viewcode-back" href="../../model.html#addressbook.model.Address">[docs]</a><span class="k">class</span> <span class="nc">Address</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Address structure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">street_address_lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize Address with all needed structures.</span>
+
+<span class="sd">        :param street_address_lines: all the lines needed to be in the envelope.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">street_address_lines</span> <span class="o">=</span> <span class="n">street_address_lines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Group"><a class="viewcode-back" href="../../model.html#addressbook.model.Group">[docs]</a><span class="k">class</span> <span class="nc">Group</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Group structure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize Group with all needed structures.</span>
+<span class="sd">        The persons connected to th group will be empty at the beginning.</span>
+
+<span class="sd">        :param name: of the group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">persons</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../contents.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
