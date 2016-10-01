@@ -53,20 +53,9 @@ def create_group(count):
     # create testing group object
     group_name = GROUP_NAMES[count % len(GROUP_NAMES)]
     group = addressbook.Group(name=group_name)
-    #persons = set()
     # create testing person object
     for i in range(0, count):
         person = create_person(i)
         group.persons.add(person)
-        #persons.add(person)
-
-        # person = self.all_persons[i]
-        # person.first_name = self.FIRST_NAMES[i % len(self.FIRST_NAMES)]
-        # person.last_name = self.LAST_NAMES[i % len(self.LAST_NAMES)]
-        # for j in range (0, i):
-        #     person.emails.add(self.EMAILS[i % len(self.EMAILS)])
-        # group.persons.add(person)
-        # self.persons.add(person)
-        # persons.add(person)
 
     return group

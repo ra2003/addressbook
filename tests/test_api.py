@@ -236,14 +236,14 @@ class ApiTestCase(unittest.TestCase):
                 returned values represent persons where parameters are
                 equal with the one from helper structure.
         """
-        for i in range(tests.TEST_COUNT):
+        for i in range(len(tests.EMAILS)): # only email addresses needed to check
             # create testing group object
             group = self._create_group(i)
 
             for person in group.persons:
                 for email in person.emails:
-                    for i in range(0, len(email), 3):
-                        email_prefix = email[:i]
+                    for j in range(0, len(email), 4):
+                        email_prefix = email[:j]
                         # check by prefix
                         persons = self.address_book.find_persons_by_email(email_prefix)
                         # check values from helper structures
